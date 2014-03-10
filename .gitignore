@@ -1,4 +1,5 @@
 .idea/
+jsonQuery/
 bower_components/
 node_modules/
 temp/
