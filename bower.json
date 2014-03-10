@@ -1,0 +1,12 @@
+{
+  "name": "jsonQuery",
+  "version": "0.0.0",
+  "main": "dist/jsonQuery.min.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test"
+  ],
+  "dependencies": {}
+}
