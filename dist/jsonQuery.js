@@ -3,12 +3,12 @@
 
   // CommonJS (node) module
   if (typeof module === 'object' && module.exports) {
-    return module.exports = factory( global );
+    module.exports = factory( global );
   }
 
   // AMD module
   if (typeof define === 'function' && define.amd) {
-    return define(function () {
+    define(function () {
       return factory(global);
     });
   }
@@ -16,12 +16,10 @@
   // browser
   global.JsonQuery = factory(global);
 
-}(this, function (global, undefined) {
-  'use strict';
+}( this, function (global, undefined) {
   /**
    *
    * @param data {JSON}
-   * @param options {object}
    * @constructor
    */
   var JsonQuery = function( data ) {

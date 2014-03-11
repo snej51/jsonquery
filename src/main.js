@@ -16,8 +16,7 @@
   // browser
   global.JsonQuery = factory(global);
 
-}(function (global, undefined) {
-  'use strict';
+}( this, function (global, undefined) {
   /**
    *
    * @param data {JSON}
