@@ -51,32 +51,65 @@
      * @param path {String}
      */
     from: function ( path ) {
+      var i,
+          len,
+          tmp = [];
       this.properties = path.split( '.' );
       this.index = -1;
       this.lastIndex = this.properties.length - 1;
       while ( ++ this.index <= this.lastIndex ) {
-        if ( this.data.hasOwnProperty( this.properties[this.index] ) ) {
-          this.data = this.data[this.properties[this.index]];
+        if( this.is( this.data, 'array') ) {
+          len = this.data.length;
+          for ( i = 0; i < len; i += 1 ) {
+            if ( this.data[i].hasOwnProperty( this.properties[this.index] ) ) {
+              this.data[i] = this.data[i][this.properties[this.index]];
+              tmp.push( this.data[i] );
+            } else {
+              this.e = new ShowError( 'from' , 'traverse failed because property ' + this.properties[this.index] + ' not found' );
+              this.e.failedAt = this.properties.slice( 0, this.index + 1).join( '.' );
+              throw this.e;
+            }
+          }
+          this.data = tmp;
         } else {
-          this.e = new ShowError( 'from' , 'traverse failed because property ' + this.properties[this.index] + ' not found' );
-          this.e.failedAt = this.properties.slice( 0, this.index + 1).join( '.' );
-          throw this.e;
+          if ( this.data.hasOwnProperty( this.properties[this.index] ) ) {
+            this.data = this.data[this.properties[this.index]];
+          } else {
+            this.e = new ShowError( 'from' , 'traverse failed because property ' + this.properties[this.index] + ' not found' );
+            this.e.failedAt = this.properties.slice( 0, this.index + 1).join( '.' );
+            throw this.e;
+          }
         }
       }
       return this;
     },
     /**
-     *
-     * @param key {string}
+     * removes an key from the actual data set
+     * @param key {string} the key which should be removed from the actual data set
      */
     remove: function ( key ) {
+      var i,
+          len;
       if( key ) {
-        if( this.data.hasOwnProperty( key ) ) {
-          delete this.data[key];
+        if ( this.is( this.data, 'array') ) {
+          len = this.data.length;
+          for ( i = 0; i < len; i += 1 ) {
+            if( this.data[i].hasOwnProperty( key ) ) {
+              delete this.data[i][key];
+            } else {
+              this.e = new ShowError( 'remove' , 'remove failed because key does not exist');
+              this.e.failedAt = this.properties.slice(0, this.index + 1).join('.');
+              throw this.e;
+            }
+          }
         } else {
-          this.e = new ShowError( 'remove' , 'remove failed because key does not exist');
-          this.e.failedAt = this.properties.slice(0, this.index + 1).join('.');
-          throw this.e;
+          if( this.data.hasOwnProperty( key ) ) {
+            delete this.data[key];
+          } else {
+            this.e = new ShowError( 'remove' , 'remove failed because key does not exist');
+            this.e.failedAt = this.properties.slice(0, this.index + 1).join('.');
+            throw this.e;
+          }
         }
       } else {
         this.e = new ShowError( 'remove' , 'remove failed because key not defined');
@@ -86,18 +119,38 @@
       return this;
     },
     /**
-     *
-     * @param key
+     * inserts keys and values to the actual data set
+     * @param data {object} object literal with the key value pairs for inserting the keys and values
      * @returns {JsonQuery}
      */
-    insert: function ( key ) {
-      if( key ) {
-        if( !this.data.hasOwnProperty( key ) ) {
-          this.data[key] = '';
-        } else {
-          this.e = new ShowError( 'insert' , 'insert failed because key already exist');
-          this.e.failedAt = this.properties.slice(0, this.index + 1).join('.');
-          throw this.e;
+    insert: function ( data ) {
+      var key,
+          i,
+          len;
+      if( data ) {
+        for ( key in data ) {
+          if ( data.hasOwnProperty( key ) ) {
+            if( this.is( this.data, 'array' ) ){
+              len = this.data.length;
+              for ( i = 0; i < len; i += 1 ) {
+                if( !this.data[i].hasOwnProperty( key ) ) {
+                  this.data[i][key] = data[key];
+                } else {
+                  this.e = new ShowError( 'insert' , 'insert failed because key already exist');
+                  this.e.failedAt = this.properties.slice(0, this.index + 1).join('.');
+                  throw this.e;
+                }
+              }
+            } else {
+              if( !this.data.hasOwnProperty( key ) ) {
+                this.data[key] = value || '';
+              } else {
+                this.e = new ShowError( 'insert' , 'insert failed because key already exist');
+                this.e.failedAt = this.properties.slice(0, this.index + 1).join('.');
+                throw this.e;
+              }
+            }
+          }
         }
       } else {
         this.e = new ShowError( 'insert' , 'insert failed because key not defined');
@@ -107,8 +160,8 @@
       return this;
     },
     /**
-     *
-     * @param query
+     * queries the actual data set with an provided filter object
+     * @param query {object} object literal with key value pairs which describe the filter
      * @returns {JsonQuery}
      */
     where: function ( query ) {
@@ -174,8 +227,8 @@
       return this;
     },
     /**
-     *
-     * @param data
+     * sets the values in the actual data sets from the provided data object
+     * @param data {object} object literal with the key value pairs for setting the values
      * @returns {JsonQuery}
      */
     set: function ( data ) {
@@ -215,10 +268,11 @@
       return this;
     },
     /**
-     *
-     * @param key {string}
-     * @param type {string}
+     * sorts an array / collection
+     * @param key {string} an key for sorting
+     * @param type {string} the type of the key for switching to case incentive mode
      * @param dir {string} asc -> ascending, desc -> descending
+     * @returns {JsonQuery}
      */
     sort : function ( key, type, dir ) {
       if( arguments.length === 3 ) {
@@ -286,25 +340,50 @@
     },
     /**
      *
-     * @param root
-     * @param resultKey
+     * @param root {boolean} if true the root element is returned back
+     * @param resultKey {string} if provided the method looks for the key and returns it value
      * @returns {*}
      */
     select : function ( root, resultKey ) {
-      var result;
-      if( root ) {
-        result = resultKey ? this.root[resultKey] : this.root;
+      var result,
+          data = root ? this.root : this.data,
+          i,
+          len;
+      if( resultKey ) {
+        if( this.is( data, 'array') ) {
+          len = data.length;
+          result = [];
+          for ( i = 0; i < len; i += 1 ) {
+            if( data[i].hasOwnProperty( resultKey ) ) {
+              result.push( data[i][resultKey] );
+            } else {
+              this.e = new ShowError( 'select' , 'select failed because the result key was not found in the data set' );
+              this.e.failedAt = this.properties.slice(0, this.index + 1).join('.');
+              throw this.e;
+            }
+          }
+        } else {
+          if( data.hasOwnProperty( resultKey ) ) {
+            result = data[resultKey];
+          } else {
+            this.e = new ShowError( 'select' , 'select failed because the result key was not found in the data set' );
+            this.e.failedAt = this.properties.slice(0, this.index + 1).join('.');
+            throw this.e;
+          }
+        }
       } else {
-        result = resultKey ? this.data[resultKey] : this.data;
+        result = data;
       }
       return result;
     },
     /**
-     *
+     * checks the type of an value against an provided type
+     * @param val {*} the value to be checked
+     * @param type {String} the type to check against
      * @returns {boolean}
      */
-    is: function ( obj, type ) {
-      return Object.prototype.toString.call( obj ) === '[object ' + ( type.charAt(0).toUpperCase() + type.slice(1) )+ ']';
+    is: function ( val, type ) {
+      return Object.prototype.toString.call( val ) === '[object ' + ( type.charAt(0).toUpperCase() + type.slice(1) )+ ']';
     }
   };
   return function (data) {
