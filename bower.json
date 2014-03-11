@@ -11,10 +11,5 @@
   },
   "dependencies": {},
   "devDependencies": {},
-  "main": "dist/jsonQuery.min.js",
-  "ignore": [
-    "node_modules",
-    "bower_components",
-    "test"
-  ]
+  "main": "dist/jsonQuery.min.js"
 }
