@@ -143,7 +143,7 @@
               }
             } else {
               if( !this.data.hasOwnProperty( key ) ) {
-                this.data[key] = value || '';
+                this.data[key] = data[key];
               } else {
                 this.e = new ShowError( 'insert' , 'insert failed because key already exist');
                 this.e.failedAt = this.properties.slice(0, this.index + 1).join('.');
