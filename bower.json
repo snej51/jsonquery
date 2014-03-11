@@ -1,12 +1,21 @@
 {
   "name": "jsonQuery",
   "version": "0.0.1",
+  "location": "git://github.com/snej51/jsonQuery.git",
+  "author": "Jens Oswald",
+  "description": "An library for extract and manipulate JSON data",
+  "keywords": ["literals", "objects", "array", "JSON", "json", "utilities"],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/snej51/jsonQuery.git"
+  },
+  "dependencies": {},
+  "devDependencies": {},
   "main": "dist/jsonQuery.min.js",
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
     "test"
-  ],
-  "dependencies": {}
+  ]
 }
