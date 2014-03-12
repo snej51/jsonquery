@@ -1,7 +1,7 @@
 {
   "name": "jsonQuery",
   "version": "0.0.1",
-  "main": "./dist/jsonQuery.min.js",
+  "main": "./dist/jsonQuery.js",
   "description": "An library for extract and manipulate JSON data",
   "repository": {
     "type": "git",
