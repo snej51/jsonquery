@@ -55,7 +55,7 @@
           len,
           tmp = [];
       this.properties = path.split( '.' );
-      this.index = 1;
+      this.index = -1;
       this.lastIndex = this.properties.length - 1;
       while ( ++ this.index <= this.lastIndex ) {
         if( this.is( this.data, 'array') ) {
