@@ -1,7 +1,7 @@
 {
-  "name": "jsonQuery",
+  "name": "json-query",
   "version": "0.0.1",
-  "location": "git://github.com/snej51/jsonQuery.git",
+  "location": "git://github.com/snej51/json-query.git",
   "author": "Jens Oswald",
   "description": "An library for extract and manipulate JSON data",
   "keywords": ["literals", "objects", "array", "JSON", "json", "utilities"],
