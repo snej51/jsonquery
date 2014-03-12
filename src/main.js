@@ -374,7 +374,7 @@
       } else {
         result = data;
       }
-      return result;
+      return this.is( result, 'array') ? ( result.length < 2 ? result[0] : result ) : result;
     },
     /**
      * checks the type of an value against an provided type
