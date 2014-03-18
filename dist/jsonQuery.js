@@ -182,7 +182,7 @@
               found.length = 0;
               for ( key in query ) {
                 if( query.hasOwnProperty( key ) ) {
-                  op = query[key] ? ( typeof ( query[key] === 'string') ? ( query[key].search(/(&&)/) > -1 ? 'and': ( query[key].search(/([||])/) > -1 ? 'or' : null ) ): null ): null;
+                  op = query[key] ? ( typeof ( query[key] ) === 'string' ? ( query[key].search(/(&&)/) > -1 ? 'and': ( query[key].search(/([||])/) > -1 ? 'or' : null ) ): null ): null;
                   if( op ) {
                     if ( op === 'and' ) {
                       left = query[key].split( ' && ' )[0];
