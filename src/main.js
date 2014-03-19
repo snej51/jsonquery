@@ -384,6 +384,37 @@
      */
     is: function ( val, type ) {
       return Object.prototype.toString.call( val ) === '[object ' + ( type.charAt(0).toUpperCase() + type.slice(1) )+ ']';
+    },
+    /**
+     * extends the target data object by copying all key value pairs from the provided source object to the target object
+     * works only with objects
+     * @param target {object} the target object
+     * @param source {object} the source object
+     */
+    extend: function ( target, source ) {
+      var key;
+      if (source) {
+        if( this.is( this.data, 'object' ) ) {
+          for( key in source ) {
+            if( source.hasOwnProperty( key ) ) {
+              target[key] = source[key];
+            }
+          }
+        }
+      }
+      return target;
+    },
+    /**
+     * create a (shallow-cloned) duplicate of an object.
+     * @returns {JsonQuery}
+     */
+    clone: function () {
+      if( this.is( this.data, 'object') ) {
+        this.data  = this.extend({}, this.target );
+      } else if( this.is( this.data, 'array') ) {
+        this.target.slice();
+      }
+      return this;
     }
   };
   return function (data) {
