@@ -410,7 +410,7 @@
      */
     clone: function () {
       if( this.is( this.data, 'object') ) {
-        this.data  = this.extend({}, this.target );
+        this.data  = this.extend({}, this.data );
       } else if( this.is( this.data, 'array') ) {
         this.target.slice();
       }
