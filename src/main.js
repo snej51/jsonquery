@@ -412,7 +412,7 @@
       if( this.is( this.data, 'object') ) {
         this.data  = this.extend({}, this.data );
       } else if( this.is( this.data, 'array') ) {
-        this.target.slice(0);
+        this.data.slice(0);
       }
       return this;
     }
