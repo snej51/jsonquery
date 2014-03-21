@@ -52,8 +52,8 @@
      */
     from: function ( path ) {
       var i,
-          len,
-          tmp = [];
+        len,
+        tmp = [];
       this.properties = path.split( '.' );
       this.index = -1;
       this.lastIndex = this.properties.length - 1;
@@ -89,7 +89,7 @@
      */
     remove: function ( key ) {
       var i,
-          len;
+        len;
       if( key ) {
         if ( this.is( this.data, 'array') ) {
           len = this.data.length;
@@ -125,8 +125,8 @@
      */
     insert: function ( data ) {
       var key,
-          i,
-          len;
+        i,
+        len;
       if( data ) {
         for ( key in data ) {
           if ( data.hasOwnProperty( key ) ) {
@@ -233,8 +233,8 @@
      */
     set: function ( data ) {
       var key,
-          i,
-          len;
+        i,
+        len;
       if( data ) {
         for ( key in data ) {
           if ( data.hasOwnProperty( key ) ) {
@@ -346,9 +346,9 @@
      */
     select : function ( root, resultKey ) {
       var result,
-          data = root ? this.root : this.data,
-          i,
-          len;
+        data = root ? this.root : this.data,
+        i,
+        len;
       if( resultKey ) {
         if( this.is( data, 'array') ) {
           len = data.length;
@@ -412,7 +412,7 @@
       if( this.is( this.data, 'object') ) {
         this.data  = this.extend({}, this.data );
       } else if( this.is( this.data, 'array') ) {
-        this.target.slice();
+        this.target.slice(0);
       }
       return this;
     }
