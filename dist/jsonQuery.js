@@ -14,7 +14,7 @@
   }
 
   // browser
-  global.JsonQuery = factory(global);
+  global.jsonQuery = factory(global);
 
 }( this, function (global, undefined) {
   /**
