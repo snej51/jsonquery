@@ -65,9 +65,7 @@
               this.data[i] = this.data[i][this.properties[this.index]];
               tmp.push( this.data[i] );
             } else {
-              this.e = new ShowError( 'from' , 'traverse failed because property ' + this.properties[this.index] + ' not found' );
-              this.e.failedAt = this.properties.slice( 0, this.index + 1).join( '.' );
-              throw this.e;
+              this.data = null;
             }
           }
           this.data = tmp;
@@ -75,9 +73,7 @@
           if ( this.data.hasOwnProperty( this.properties[this.index] ) ) {
             this.data = this.data[this.properties[this.index]];
           } else {
-            this.e = new ShowError( 'from' , 'traverse failed because property ' + this.properties[this.index] + ' not found' );
-            this.e.failedAt = this.properties.slice( 0, this.index + 1).join( '.' );
-            throw this.e;
+              this.data = null;
           }
         }
       }
@@ -96,25 +92,13 @@
           for ( i = 0; i < len; i += 1 ) {
             if( this.data[i].hasOwnProperty( key ) ) {
               delete this.data[i][key];
-            } else {
-              this.e = new ShowError( 'remove' , 'remove failed because key does not exist');
-              this.e.failedAt = this.properties.slice(0, this.index + 1).join('.');
-              throw this.e;
             }
           }
         } else {
           if( this.data.hasOwnProperty( key ) ) {
             delete this.data[key];
-          } else {
-            this.e = new ShowError( 'remove' , 'remove failed because key does not exist');
-            this.e.failedAt = this.properties.slice(0, this.index + 1).join('.');
-            throw this.e;
           }
         }
-      } else {
-        this.e = new ShowError( 'remove' , 'remove failed because key not defined');
-        this.e.failedAt = this.properties.slice(0, this.index + 1).join('.');
-        throw this.e;
       }
       return this;
     },
@@ -135,27 +119,15 @@
               for ( i = 0; i < len; i += 1 ) {
                 if( !this.data[i].hasOwnProperty( key ) ) {
                   this.data[i][key] = data[key];
-                } else {
-                  this.e = new ShowError( 'insert' , 'insert failed because key already exist');
-                  this.e.failedAt = this.properties.slice(0, this.index + 1).join('.');
-                  throw this.e;
                 }
               }
             } else {
               if( !this.data.hasOwnProperty( key ) ) {
                 this.data[key] = data[key];
-              } else {
-                this.e = new ShowError( 'insert' , 'insert failed because key already exist');
-                this.e.failedAt = this.properties.slice(0, this.index + 1).join('.');
-                throw this.e;
               }
             }
           }
         }
-      } else {
-        this.e = new ShowError( 'insert' , 'insert failed because key not defined');
-        this.e.failedAt = this.properties.slice(0, this.index + 1).join('.');
-        throw this.e;
       }
       return this;
     },
@@ -208,20 +180,8 @@
                 result.push( this.data[i] );
               }
             }
-          } else {
-            this.e = new ShowError( 'where' , 'where failed because query is malformed' );
-            this.e.failedAt = this.properties.slice(0, this.index + 1).join('.');
-            throw this.e;
           }
-        } else {
-          this.e = new ShowError( 'where' , 'where failed because data is object' );
-          this.e.failedAt = this.properties.slice(0, this.index + 1).join('.');
-          throw this.e;
         }
-      } else {
-        this.e = new ShowError( 'where' , 'where failed because query is not defined' );
-        this.e.failedAt = this.properties.slice(0, this.index + 1).join('.');
-        throw this.e;
       }
       this.data = result.length < 2 ? result[0] : result;
       return this;
@@ -243,27 +203,15 @@
               for ( i = 0; i < len; i += 1 ) {
                 if( this.data[i].hasOwnProperty( key ) ) {
                   this.data[i][key] = data[key];
-                } else {
-                  this.e = new ShowError( 'set' , 'set failed because key ' + key + ' was not found' );
-                  this.e.failedAt = this.properties.slice(0, this.index + 1).join('.');
-                  throw this.e;
                 }
               }
             } else {
               if( this.data.hasOwnProperty( key ) ) {
                 this.data[key] = data[key];
-              } else {
-                this.e = new ShowError( 'set' , 'set failed because key ' + key + ' was not found' );
-                this.e.failedAt = this.properties.slice(0, this.index + 1).join('.');
-                throw this.e;
               }
             }
           }
         }
-      } else {
-        this.e = new ShowError( 'set' , 'set failed because no data was provided' );
-        this.e.failedAt = this.properties.slice(0, this.index + 1).join('.');
-        throw this.e;
       }
       return this;
     },
@@ -326,15 +274,7 @@
             }
             return result;
           });
-        } else {
-          this.e = new ShowError( 'sort' , 'sort failed because data is not an array' );
-          this.e.failedAt = this.properties.slice(0, this.index + 1).join('.');
-          throw this.e;
         }
-      } else {
-        this.e = new ShowError( 'sort' , 'sort failed because too few arguments defined' );
-        this.e.failedAt = this.properties.slice(0, this.index + 1).join('.');
-        throw this.e;
       }
       return this;
     },
@@ -357,24 +297,20 @@
             if( data[i].hasOwnProperty( resultKey ) ) {
               result.push( data[i][resultKey] );
             } else {
-              this.e = new ShowError( 'select' , 'select failed because the result key was not found in the data set' );
-              this.e.failedAt = this.properties.slice(0, this.index + 1).join('.');
-              throw this.e;
+              result = null;
             }
           }
         } else {
           if( data.hasOwnProperty( resultKey ) ) {
             result = data[resultKey];
           } else {
-            this.e = new ShowError( 'select' , 'select failed because the result key was not found in the data set' );
-            this.e.failedAt = this.properties.slice(0, this.index + 1).join('.');
-            throw this.e;
+            result = null;
           }
         }
       } else {
         result = data;
       }
-      return this.is( result, 'array') ? ( result.length < 2 ? result[0] : result ) : result;
+      return result ? ( this.is( result, 'array') ? ( result.length < 2 ? result[0] : result ) : result ) : result;
     },
     /**
      * checks the type of an value against an provided type
