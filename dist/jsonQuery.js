@@ -343,7 +343,7 @@
             } else {
                 result = data;
             }
-            return result ? ( this.is( result, 'array') ? ( result.length < 2 ? result[0] : result ) : result ) : result;
+            return result;
         },
         /**
          * checks the type of an value against an provided type
