@@ -197,7 +197,8 @@
                                             }
                                             break;
                                         case 'not':
-                                            if ( this.data[i][key] !== query[key] ){
+                                            right = query[key].split( ':not' )[1];
+                                            if ( this.data[i][key] !== right ) {
                                                 found.push( 'found' );
                                             }
                                             break;
