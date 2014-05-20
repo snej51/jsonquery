@@ -216,7 +216,7 @@
                     }
                 }
             }
-            this.data = result.length < 2 ? result[0] : result;
+            this.data = result;
             return this;
         },
         /**
