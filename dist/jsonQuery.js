@@ -140,6 +140,32 @@
             var found = [],
                 result = [],
                 qLen = Object.keys( query ).length,
+                opPatterns = {
+                    or: /(||)/,
+                    and: /(&&)/,
+                    not: /(not:)/
+                },
+                /**
+                 *
+                 * @param value
+                 * @param patterns
+                 */
+                getOp = function ( value, patterns ) {
+                    var pattern,
+                        pos,
+                        result;
+                    for( pattern in patterns ) {
+                        if( patterns.hasOwnProperty( pattern ) ) {
+                            pos = value.search( patterns[pattern] );
+                            if( pos > -1 ) {
+                                result = pattern;
+                            } else {
+                                result = 'even';
+                            }
+                        }
+                    }
+                    return result;
+                },
                 key,
                 op,
                 left,
@@ -154,25 +180,32 @@
                             found.length = 0;
                             for ( key in query ) {
                                 if( query.hasOwnProperty( key ) ) {
-                                    op = query[key] ? ( typeof ( query[key] ) === 'string' ? ( query[key].search(/(&&)/) > -1 ? 'and': ( query[key].search(/([||])/) > -1 ? 'or' : null ) ): null ): null;
-                                    if( op ) {
-                                        if ( op === 'and' ) {
+                                    op = getOp( query[key], opPatterns );
+                                    switch ( op ) {
+                                        case 'and':
                                             left = query[key].split( ' && ' )[0];
                                             right = query[key].split( ' && ' )[1];
                                             if( query[i][key] === left && query[i][key] === right ) {
                                                 found.push( 'found' );
                                             }
-                                        } else if ( op === 'or' ) {
+                                            break;
+                                        case 'or':
                                             left = query[key].split( ' || ' )[0];
                                             right = query[key].split( ' || ' )[1];
                                             if( query[i][key] === left || query[i][key] === right ) {
                                                 found.push( 'found' );
                                             }
-                                        }
-                                    } else {
-                                        if ( this.data[i][key] === query[key] ){
-                                            found.push( 'found' );
-                                        }
+                                            break;
+                                        case 'not':
+                                            if ( this.data[i][key] !== query[key] ){
+                                                found.push( 'found' );
+                                            }
+                                            break;
+                                        case 'even':
+                                            if ( this.data[i][key] === query[key] ){
+                                                found.push( 'found' );
+                                            }
+                                            break;
                                     }
                                 }
                             }
