@@ -146,19 +146,23 @@
                     not: /(not:)/
                 },
                 /**
-                 *
+                 * @param self
                  * @param value
                  * @param patterns
                  */
-                getOp = function ( value, patterns ) {
+                getOp = function ( self, value, patterns ) {
                     var pattern,
                         pos,
                         result;
                     for( pattern in patterns ) {
                         if( patterns.hasOwnProperty( pattern ) ) {
-                            pos = value.search( patterns[pattern] );
-                            if( pos > -1 ) {
-                                result = pattern;
+                            if( self.is( value, 'string' ) ) {
+                                pos = value.search( patterns[pattern] );
+                                if( pos > -1 ) {
+                                    result = pattern;
+                                } else {
+                                    result = 'even';
+                                }
                             } else {
                                 result = 'even';
                             }
@@ -180,7 +184,7 @@
                             found.length = 0;
                             for ( key in query ) {
                                 if( query.hasOwnProperty( key ) ) {
-                                    op = getOp( query[key], opPatterns );
+                                    op = getOp( this, query[key], opPatterns );
                                     switch ( op ) {
                                         case 'and':
                                             left = query[key].split( ' && ' )[0];
