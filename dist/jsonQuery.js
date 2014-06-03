@@ -178,6 +178,10 @@
                 dLen;
             if( query ) {
                 if( this.is( this.data, 'array' ) ) {
+                    //fix array of arrays when first array has a length of 1
+                    if( this.data.length === 1 && this.is( this.data[0], 'array' ) ) {
+                        this.data = this.data[0];
+                    }
                     if( this.is( query, 'object' ) ) {
                         dLen = this.data.length;
                         for ( i = 0; i < dLen; i += 1 ) {
